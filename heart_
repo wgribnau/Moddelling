@@ -1,0 +1,21 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Numerical example values 
+
+r_m = 0.02      
+K_m = 0.1       
+L_m = 0.005     
+R_m = 2.0       
+J_eq = 1.5e-4   
+
+# Time and frequency
+t = np.linspace(0, 10, 1000)
+omega = 2 * np.pi / 5  
+theta = omega * t
+
+# Scale factor for the heart
+S = 0.003 
+A = 16 * S
+B = S
+
