@@ -28,3 +28,38 @@ y_vel = b * omega * np.cos(omega * t)
 y_acc = -b * omega**2 * np.sin(omega * t)
 y_jerk = -b * omega**3 * np.cos(omega * t)
 
+# Inverse Dynamics
+coeff_current = (2 * J_eq) / (K_m * r_m)
+
+i_x = coeff_current * x_acc
+di_x_dt = coeff_current * x_jerk
+
+i_y = coeff_current * y_acc
+di_y_dt = coeff_current * y_jerk
+
+u_x = L_m * di_x_dt + (2 * K_m / r_m) * x_vel + R_m * i_x
+u_y = L_m * di_y_dt + (2 * K_m / r_m) * y_vel + R_m * i_y
+
+u_ml = 0.5 * (u_x + u_y)
+u_mr = 0.5 * (u_x - u_y)
+
+# Plots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+ax1.plot(x_pos, y_pos, 'k-', linewidth=2)
+ax1.set_title(f'Desired Tool Head Trajectory')
+ax1.set_xlabel('x [m]')
+ax1.set_ylabel('y [m]')
+ax1.grid(True)
+ax1.axis('equal')
+
+ax2.plot(t, u_ml, label='Left Motor Voltage ($u_{m,l}$)')
+ax2.plot(t, u_mr, label='Right Motor Voltage ($u_{m,r}$)')
+ax2.set_title('Required Motor Input Voltages')
+ax2.set_xlabel('Time [s]')
+ax2.set_ylabel('Voltage [V]')
+ax2.legend()
+ax2.grid(True)
+
+plt.tight_layout()
+plt.show()
