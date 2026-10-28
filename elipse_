@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Numerical example values 
+
+r_m = 0.02      
+K_m = 0.1       
+L_m = 0.005     
+
+R_m = 2.0       
+J_eq = 1.5e-4   
+
+# Time and frequency
+t = np.linspace(0, 10, 1000)
+omega = 2 * np.pi / 5  
+
+# Coefficients of elipse
+a = 0.05
+b = 0.03
+
+x_pos = a * np.cos(omega * t)
+x_vel = -a * omega * np.sin(omega * t)
+x_acc = -a * omega**2 * np.cos(omega * t)
+x_jerk = a * omega**3 * np.sin(omega * t)
+    
+y_pos = b * np.sin(omega * t)
+y_vel = b * omega * np.cos(omega * t)
+y_acc = -b * omega**2 * np.sin(omega * t)
+y_jerk = -b * omega**3 * np.cos(omega * t)
+
