@@ -6,9 +6,12 @@ import matplotlib.pyplot as plt
 r_m = 0.02      
 K_m = 0.1       
 L_m = 0.005     
-
 R_m = 2.0       
 J_eq = 1.5e-4   
+
+# Damping coefficients
+b_x = 0.1
+b_y = 0.1
 
 # Time and frequency
 t = np.linspace(0, 10, 1000)
@@ -29,16 +32,18 @@ y_acc = -b * omega**2 * np.sin(omega * t)
 y_jerk = -b * omega**3 * np.cos(omega * t)
 
 # Inverse Dynamics
-coeff_current = (2 * J_eq) / (K_m * r_m)
+coeff_acc = (2 * J_eq) / (K_m * r_m)
+coeff_vel_x = (r_m * b_x) / K_m
+coeff_vel_y = (r_m * b_y) / K_m
 
-i_x = coeff_current * x_acc
-di_x_dt = coeff_current * x_jerk
+i_x = coeff_acc * x_acc + coeff_vel_x * x_vel
+i_y = coeff_acc * y_acc + coeff_vel_y * y_vel
 
-i_y = coeff_current * y_acc
-di_y_dt = coeff_current * y_jerk
+di_x_dt = coeff_acc * x_jerk + coeff_vel_x * x_acc
+di_y_dt = coeff_acc * y_jerk + coeff_vel_y * y_acc
 
-u_x = L_m * di_x_dt + (2 * K_m / r_m) * x_vel + R_m * i_x
-u_y = L_m * di_y_dt + (2 * K_m / r_m) * y_vel + R_m * i_y
+u_x = L_m * di_x_dt + R_m * i_x
+u_y = L_m * di_y_dt + R_m * i_y
 
 u_ml = 0.5 * (u_x + u_y)
 u_mr = 0.5 * (u_x - u_y)
@@ -47,7 +52,7 @@ u_mr = 0.5 * (u_x - u_y)
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
 ax1.plot(x_pos, y_pos, 'k-', linewidth=2)
-ax1.set_title(f'Desired Tool Head Trajectory')
+ax1.set_title('Desired Tool Head Trajectory')
 ax1.set_xlabel('x [m]')
 ax1.set_ylabel('y [m]')
 ax1.grid(True)
